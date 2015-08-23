@@ -11,10 +11,32 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = filecrypt
 TEMPLATE = app
 
+QUAZIPCODEDIR += $${PWD}/../quazip/
+ZLIBCODEDIR += $${PWD}/../zlib/
+
+INCLUDEPATH += $${QUAZIPCODEDIR}
+INCLUDEPATH += $${ZLIBCODEDIR}
+
+unix {
+    LIBS += -L$${QUAZIPCODEDIR} -lquazip -lz
+}
+
+win32 {
+    LIBS += -L$${QUAZIPCODEDIR} -lquazipdll -lzdll
+}
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+    mainwindow.cpp \
+    filedialog.cpp \
+    encrypt.cpp \
+    compress.cpp
 
-HEADERS  += mainwindow.h
+HEADERS += mainwindow.h \
+    filedialog.h \
+    encrypt.h \
+    compress.h
 
-FORMS    += mainwindow.ui
+FORMS += mainwindow.ui
+
+RESOURCES += \
+    resources.qrc

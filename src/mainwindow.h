@@ -2,6 +2,12 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QFileDialog>
+#include <QDebug>
+#include <QListView>
+#include <QTreeView>
+
+#include <compress.h>
 
 namespace Ui {
 class MainWindow;
@@ -17,6 +23,10 @@ public:
 
 private:
     Ui::MainWindow *ui;
+public slots:
+    void onInputBrowseButtonClick();
+    void onOutputBrowseButtonClick();
+    void onEncryptButtonClieck();
 };
 
 #endif // MAINWINDOW_H
