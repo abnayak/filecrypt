@@ -64,7 +64,7 @@
       <item>
        <widget class="QPushButton" name="outputPushButton">
         <property name="text">
-         <string>Browse</string>
+         <string>Save As</string>
         </property>
        </widget>
       </item>
@@ -105,7 +105,7 @@
      </layout>
     </item>
     <item row="2" column="0">
-     <widget class="QTextEdit" name="textEdit">
+     <widget class="QTextEdit" name="logText">
       <property name="sizePolicy">
        <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
         <horstretch>0</horstretch>

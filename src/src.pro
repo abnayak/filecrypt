@@ -29,14 +29,19 @@ SOURCES += main.cpp\
     mainwindow.cpp \
     filedialog.cpp \
     encrypt.cpp \
-    compress.cpp
+    compress.cpp \
+    dropdownbutton.cpp
 
 HEADERS += mainwindow.h \
     filedialog.h \
     encrypt.h \
-    compress.h
+    compress.h \
+    dropdownbutton.h
 
 FORMS += mainwindow.ui
 
 RESOURCES += \
     resources.qrc
+
+DISTFILES += \
+    ../../../Downloads/Folder-26.png

@@ -6,8 +6,10 @@
 #include <QDebug>
 #include <QListView>
 #include <QTreeView>
+#include <QThreadPool>
 
 #include <compress.h>
+#include <dropdownbutton.h>
 
 namespace Ui {
 class MainWindow;
@@ -23,10 +25,20 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    // Dropdown file/dir browse button
+    DropDownButton *inputBrowseButton;
+
 public slots:
-    void onInputBrowseButtonClick();
     void onOutputBrowseButtonClick();
-    void onEncryptButtonClieck();
+    void onEncryptButtonClick();
+    void onLogTextChanged(QString);
+
+    // Following two slots are being called by DropDownButton
+    void onFileBrowseButtonClick();
+    void onFolderBrowseButtonClick();
+
+signals:
+    void logTextChanged(QString);
 };
 
 #endif // MAINWINDOW_H

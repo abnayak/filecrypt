@@ -3,11 +3,20 @@
 
 #include <QString>
 #include <JlCompress.h>
+#include <QRunnable>
+#include <QDebug>
+#include <QMainWindow>
+#include <mainwindow.h>
 
-class Compress
-{
+class Compress:public QObject, public QRunnable {
+private:
+    QObject *parent;
+    QString input;
+    QString output;
+    void printLog(QString);
 public:
-    Compress();
+    Compress(QObject *parent, QString input, QString output);
+    void run();
     bool compressFile(QString inputFile, QString output);
     bool compressDir(QString inputDir, QString output);
     bool compressFiles(QStringList inputFiles, QString output);
