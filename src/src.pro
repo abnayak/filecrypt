@@ -14,8 +14,13 @@ TEMPLATE = app
 QUAZIPCODEDIR += $${PWD}/../quazip/
 ZLIBCODEDIR += $${PWD}/../zlib/
 
+# Inlcude Botan
+include($${PWD}/botan.pri)
+
 INCLUDEPATH += $${QUAZIPCODEDIR}
 INCLUDEPATH += $${ZLIBCODEDIR}
+
+CONFIG += c++11
 
 unix {
     LIBS += -L$${QUAZIPCODEDIR} -lquazip -lz
@@ -42,6 +47,3 @@ FORMS += mainwindow.ui
 
 RESOURCES += \
     resources.qrc
-
-DISTFILES += \
-    ../../../Downloads/Folder-26.png
