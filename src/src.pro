@@ -33,15 +33,15 @@ win32 {
 SOURCES += main.cpp\
     mainwindow.cpp \
     filedialog.cpp \
-    encrypt.cpp \
     compress.cpp \
-    dropdownbutton.cpp
+    dropdownbutton.cpp \
+    botanwrapper.cpp
 
 HEADERS += mainwindow.h \
     filedialog.h \
-    encrypt.h \
     compress.h \
-    dropdownbutton.h
+    dropdownbutton.h \
+    botanwrapper.h
 
 FORMS += mainwindow.ui
 

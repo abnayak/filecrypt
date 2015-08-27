@@ -10,6 +10,7 @@
 
 #include <compress.h>
 #include <dropdownbutton.h>
+#include <botanwrapper.h>
 
 namespace Ui {
 class MainWindow;
@@ -27,11 +28,18 @@ private:
     Ui::MainWindow *ui;
     // Dropdown file/dir browse button
     DropDownButton *inputBrowseButton;
+    // Botan objec to encrypt the file
+    BotanWrapper *botan;
+    int validateFields();
+    void encrypt(QString source, QString destination);
+    void decrypt(QString source, QString destination);
+    void deleteFile(QString file);
 
 public slots:
     void onOutputBrowseButtonClick();
     void onEncryptButtonClick();
     void onLogTextChanged(QString);
+    void onDecryptCheckBoxSelect();
 
     // Following two slots are being called by DropDownButton
     void onFileBrowseButtonClick();
