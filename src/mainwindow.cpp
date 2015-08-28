@@ -47,9 +47,12 @@ void MainWindow::encrypt(QString source, QString destination) {
     // Start the thread to compress the files
     emit onLogTextChanged(QString("Compressing files..."));
     Compress *compressRunner = new Compress(this, source, zippedFile);
-    compressRunner->setAutoDelete(false);
-    QThreadPool::globalInstance()->start(compressRunner);
+    //compressRunner->setAutoDelete(false);
+    //QThreadPool::globalInstance()->start(compressRunner);
+    // Start the compression
+    compressRunner->run();
     emit onLogTextChanged(QString("Compression finished..."));
+
 
     // Start the encryption
     emit onLogTextChanged(QString("Encrypting the file..."));

@@ -4,6 +4,13 @@ Compress::Compress(QObject *parent, QString input, QString output) {
     this->parent = parent;
     this->input = input;
     this->output = output;
+    moveToThread(&thread);
+    thread.start();
+}
+
+Compress::~Compress() {
+    thread.quit();
+    thread.wait();
 }
 
 bool Compress::compressFile(QString inputFile, QString output) {
