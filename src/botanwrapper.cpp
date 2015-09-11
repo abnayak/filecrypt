@@ -5,12 +5,13 @@
 
 #include "botanwrapper.h"
 
-BotanWrapper::BotanWrapper(QObject *parent) :
+BotanWrapper::BotanWrapper(QObject *parent, QString source, QString destination, JobType jobType) :
     QObject(parent)
 {
-    // Start the thread
-    moveToThread(&thread);
-    thread.start();
+    this->parent = parent;
+    this->source = source;
+    this->destination = destination;
+    this->jobType = jobType;
 
     //Set the default salt size
     mSalt.resize(48);
@@ -25,9 +26,15 @@ BotanWrapper::BotanWrapper(QObject *parent) :
     mPassword = Hash("!@&^jdshUG24!T^!@*&!Y@()&^909+!-@!@#07");
 }
 
+void BotanWrapper::run() {
+    if (jobType == encrypt) {
+        EncryptFile(source, destination);
+    } else {
+        DecryptFile(source, destination);
+    }
+}
+
 BotanWrapper::~BotanWrapper() {
-    thread.quit();
-    thread.wait();
 }
 
 QString BotanWrapper::Hash(QString Data)
@@ -173,6 +180,9 @@ bool BotanWrapper::EncryptFile(QString Source, QString Destination)
         out.flush();
         out.close();
         in.close();
+
+        // Send the signal that encryption finished
+        QMetaObject::invokeMethod(parent, "onEncryptionFinished", Qt::QueuedConnection);
 
         return true;
     }

@@ -4,13 +4,9 @@ Compress::Compress(QObject *parent, QString input, QString output) {
     this->parent = parent;
     this->input = input;
     this->output = output;
-    moveToThread(&thread);
-    thread.start();
 }
 
 Compress::~Compress() {
-    thread.quit();
-    thread.wait();
 }
 
 bool Compress::compressFile(QString inputFile, QString output) {
@@ -50,9 +46,11 @@ void Compress::run() {
         qDebug() << "File: " << input << " does not exists.";
         printLog("File: " + input + " does not exist. Choose another file");
     }
-    printLog("Finished compression.");
+
+    // Send signal to parent about compression finish
+    QMetaObject::invokeMethod(parent, "onCompressionFinished", Qt::QueuedConnection);
 }
 
 void Compress::printLog(QString log) {
-    QMetaObject::invokeMethod(parent, "logTextChanged", Qt::DirectConnection, Q_ARG(QString, log));
+    QMetaObject::invokeMethod(parent, "logTextChanged", Qt::QueuedConnection, Q_ARG(QString, log));
 }

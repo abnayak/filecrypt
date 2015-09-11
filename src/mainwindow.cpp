@@ -26,52 +26,69 @@ void MainWindow::onOutputBrowseButtonClick() {
 }
 
 void MainWindow::onEncryptButtonClick() {
-    QString source = ui->inputLineEdit->text();
-    QString destination = ui->outputLineEdit->text();
-
     // validate the input fields
     if (validateFields()) {
         return;
     }
 
     if (ui->decryptCheckBox->checkState() == Qt::Checked ) {
-        decrypt(source, destination);
+        decrypt();
     } else {
-        encrypt(source, destination);
+        beginCompress();
     }
 }
 
-void MainWindow::encrypt(QString source, QString destination) {
-    QString password = ui->password->text();
+void MainWindow::beginCompress() {
+    QString source = ui->inputLineEdit->text();
+    QString destination = ui->outputLineEdit->text();
     QString zippedFile = destination + ".zip";
     // Start the thread to compress the files
     emit onLogTextChanged(QString("Compressing files..."));
-    Compress *compressRunner = new Compress(this, source, zippedFile);
-    //compressRunner->setAutoDelete(false);
-    //QThreadPool::globalInstance()->start(compressRunner);
-    // Start the compression
-    compressRunner->run();
-    emit onLogTextChanged(QString("Compression finished..."));
 
+    // Start the compression
+    Compress *compressRunner = new Compress(this, source, zippedFile);
+    QThreadPool::globalInstance()->start(compressRunner);
+}
+
+void MainWindow::beginEncryption() {
+    qDebug() << "Enter MainWindow::beginEncryption";
+    QString destination = ui->outputLineEdit->text();
+    QString password = ui->password->text();
+    QString zippedFile = destination + ".zip";
 
     // Start the encryption
     emit onLogTextChanged(QString("Encrypting the file..."));
-    botan = new BotanWrapper(this);
+    botan = new BotanWrapper(this,zippedFile,destination, BotanWrapper::encrypt);
+
+    qDebug() << "Password: " << password;
+
     botan->setPassword(password);
     botan->setSalt(password+password);
-    botan->EncryptFile(zippedFile,destination);
-    delete(botan);
+
+    //botan->EncryptFile(zippedFile,destination);
+    QThreadPool::globalInstance()->start(botan);
+    qDebug() << "Exiting MainWindow::beginEncryption";
+}
+
+void MainWindow::onEncryptionFinished() {
+    QString destination = ui->outputLineEdit->text();
+    QString password = ui->password->text();
+    QString zippedFile = destination + ".zip";
+
+    //delete(botan);
     emit onLogTextChanged(QString("Encryption finished..."));
 
     // Delete the encrypted file
     deleteFile(zippedFile);
 }
 
-void MainWindow::decrypt(QString source, QString destination) {
+void MainWindow::decrypt() {
+    QString source = ui->inputLineEdit->text();
+    QString destination = ui->outputLineEdit->text();
     QString password = ui->password->text();
     // Start the decryption
     emit onLogTextChanged(QString("Decrypting the file..."));
-    botan = new BotanWrapper(this);
+    botan = new BotanWrapper(this, source, destination, BotanWrapper::decrypt);
     botan->setPassword(password);
     botan->setSalt(password+password);
     botan->DecryptFile(source, destination);
@@ -89,7 +106,7 @@ void MainWindow::deleteFile(QString fileName) {
 void MainWindow::onLogTextChanged(QString log) {
     qDebug() << "Caught LogTextChanged signal";
     // Add the new log line to logText edit field
-    ui->logText->moveCursor(QTextCursor::End);
+    //ui->logText->moveCursor(QTextCursor::End);
     ui->logText->insertPlainText(log + "\n");
 }
 
@@ -113,6 +130,11 @@ void MainWindow::onDecryptCheckBoxSelect() {
         ui->encryptPushButton->setText(tr("Encrypt"));
         ui->passwordLabel->setText(tr("Password"));
     }
+}
+
+void MainWindow::onCompressionFinished() {
+    // Invoke encryption after the compression
+    beginEncryption();
 }
 
 /*

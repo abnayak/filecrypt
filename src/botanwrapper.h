@@ -16,20 +16,27 @@
 #include <cstring>
 #include <memory>
 #include <QThread>
+#include <QMetaObject>
+#include <QRunnable>
 
 #include "botan.h"
 
 using namespace std;
 using namespace Botan;
 
-class BotanWrapper : public QObject
+class BotanWrapper : public QObject, public QRunnable
 {
     Q_OBJECT
 public:
-    explicit BotanWrapper(QObject *parent = 0);
+    enum JobType { encrypt, decrypt };
+    explicit BotanWrapper(QObject *parent, QString source, QString destination, JobType jobType);
 
     ~BotanWrapper();
+
+    void run();
     
+    // Define the job type
+
     /*!
     * Creates a hash
     * @param Data The string to hash
@@ -97,6 +104,11 @@ signals:
 public slots:
 
 private:
+    QObject *parent ;
+    QString source;
+    QString destination;
+    JobType jobType;
+
     /*!
     * The botan libary initilizer
     */
@@ -111,10 +123,6 @@ private:
     * The password
     */
     QString mPassword;
-
-    // Spawn a separate thread to run the functions
-    QThread thread;
-
 };
 
 #endif // BOTANWRAPPER_H

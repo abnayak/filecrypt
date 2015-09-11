@@ -9,13 +9,12 @@
 #include <mainwindow.h>
 #include <QThread>
 
-class Compress:public QObject {
+class Compress:public QObject , public QRunnable{
 private:
     QObject *parent;
     QString input;
     QString output;
     void printLog(QString);
-    QThread thread;
 public:
     Compress(QObject *parent, QString input, QString output);
     ~Compress();

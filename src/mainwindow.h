@@ -31,8 +31,9 @@ private:
     // Botan objec to encrypt the file
     BotanWrapper *botan;
     int validateFields();
-    void encrypt(QString source, QString destination);
-    void decrypt(QString source, QString destination);
+    void beginCompress();
+    void beginEncryption();
+    void decrypt();
     void deleteFile(QString file);
 
 public slots:
@@ -40,6 +41,8 @@ public slots:
     void onEncryptButtonClick();
     void onLogTextChanged(QString);
     void onDecryptCheckBoxSelect();
+    void onCompressionFinished();
+    void onEncryptionFinished();
 
     // Following two slots are being called by DropDownButton
     void onFileBrowseButtonClick();
