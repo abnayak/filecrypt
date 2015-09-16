@@ -31,15 +31,15 @@ win32 {
 }
 
 SOURCES += main.cpp\
+    compress.cpp \
     mainwindow.cpp \
     filedialog.cpp \
-    compress.cpp \
     dropdownbutton.cpp \
     botanwrapper.cpp
 
-HEADERS += mainwindow.h \
+HEADERS += compress.h \
+    mainwindow.h \
     filedialog.h \
-    compress.h \
     dropdownbutton.h \
     botanwrapper.h
 

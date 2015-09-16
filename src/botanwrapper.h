@@ -24,17 +24,16 @@
 using namespace std;
 using namespace Botan;
 
-class BotanWrapper : public QObject, public QRunnable
+class BotanWrapper : public QObject
 {
     Q_OBJECT
 public:
-    enum JobType { encrypt, decrypt };
-    explicit BotanWrapper(QObject *parent, QString source, QString destination, JobType jobType);
+    explicit BotanWrapper(QObject *parent);
 
     ~BotanWrapper();
 
     void run();
-    
+
     // Define the job type
 
     /*!
@@ -74,6 +73,23 @@ public:
     QString Decrypt(QString Data);
 
     /*!
+    * Sets the Password
+    * @param Password The password
+    */
+    void setPassword(QString Password);
+
+    /*!
+    * Sets the Salt
+    * @param Salt The salt value
+    */
+    void setSalt(QString Salt);
+
+signals:
+    void EncryptionFinished();
+    void DecryptionFinished();
+
+public slots:
+    /*!
     * Encrypts a file and returns a bool indicating success
     * @param Source The source file
     * @param Destination The destination file
@@ -87,27 +103,8 @@ public:
     */
     bool DecryptFile(QString Source, QString Destination);
 
-    /*!
-    * Sets the Password
-    * @param Password The password
-    */
-    void setPassword(QString Password);
-
-    /*!
-    * Sets the Salt
-    * @param Salt The salt value
-    */
-    void setSalt(QString Salt);
-
-signals:
-    
-public slots:
-
 private:
     QObject *parent ;
-    QString source;
-    QString destination;
-    JobType jobType;
 
     /*!
     * The botan libary initilizer

@@ -1,27 +1,25 @@
 #include "compress.h"
 
-Compress::Compress(QObject *parent, QString input, QString output) {
+Zip::Zip(QObject *parent) {
     this->parent = parent;
-    this->input = input;
-    this->output = output;
 }
 
-Compress::~Compress() {
+Zip::~Zip() {
 }
 
-bool Compress::compressFile(QString inputFile, QString output) {
+bool Zip::compressFile(QString inputFile, QString output) {
     return JlCompress::compressFile(output,inputFile);
 }
 
-bool Compress::compressDir(QString inputDir, QString output) {
+bool Zip::compressDir(QString inputDir, QString output) {
     return JlCompress::compressDir(output, inputDir);
 }
 
-bool Compress::compressFiles(QStringList inputFiles, QString output) {
+bool Zip::compressFiles(QStringList inputFiles, QString output) {
     return JlCompress::compressFiles(output, inputFiles);
 }
 
-void Compress::run() {
+void Zip::compress(QString input, QString output) {
     QFileInfo fileInfo(input);
 
     if(fileInfo.exists()) {
@@ -48,9 +46,18 @@ void Compress::run() {
     }
 
     // Send signal to parent about compression finish
-    QMetaObject::invokeMethod(parent, "onCompressionFinished", Qt::QueuedConnection);
+    //QMetaObject::invokeMethod(parent, "onCompressionFinished", Qt::QueuedConnection);
+    emit compressionFinished();
 }
 
-void Compress::printLog(QString log) {
-    QMetaObject::invokeMethod(parent, "logTextChanged", Qt::QueuedConnection, Q_ARG(QString, log));
+// Extract the file
+QStringList Zip::deCompress(QString input, QString output) {
+    return JlCompress::extractDir(input, output);
+    emit deCompressionFinished();
 }
+
+void Zip::printLog(QString log) {
+    const char* fun="logTextChanged";
+    QMetaObject::invokeMethod(parent, fun, Qt::QueuedConnection, Q_ARG(QString, log));
+}
+

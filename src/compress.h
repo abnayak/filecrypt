@@ -2,26 +2,36 @@
 #define COMPRESS_H
 
 #include <QString>
+#include <QStringList>
 #include <JlCompress.h>
 #include <QRunnable>
 #include <QDebug>
 #include <QMainWindow>
 #include <mainwindow.h>
 #include <QThread>
+#include <QObject>
+#include <QMetaObject>
 
-class Compress:public QObject , public QRunnable{
+class Zip:public QObject {
+    Q_OBJECT
 private:
     QObject *parent;
-    QString input;
-    QString output;
     void printLog(QString);
-public:
-    Compress(QObject *parent, QString input, QString output);
-    ~Compress();
-    void run();
     bool compressFile(QString inputFile, QString output);
     bool compressDir(QString inputDir, QString output);
     bool compressFiles(QStringList inputFiles, QString output);
+
+public:
+    Zip(QObject *parent);
+    ~Zip();
+
+public slots:
+    void compress(QString input, QString output);
+    QStringList deCompress(QString input, QString output);
+
+signals:
+    void compressionFinished();
+    void deCompressionFinished();
 };
 
 #endif // COMPRESS_H

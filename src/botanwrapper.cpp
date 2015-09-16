@@ -5,13 +5,10 @@
 
 #include "botanwrapper.h"
 
-BotanWrapper::BotanWrapper(QObject *parent, QString source, QString destination, JobType jobType) :
+BotanWrapper::BotanWrapper(QObject *parent) :
     QObject(parent)
 {
     this->parent = parent;
-    this->source = source;
-    this->destination = destination;
-    this->jobType = jobType;
 
     //Set the default salt size
     mSalt.resize(48);
@@ -24,14 +21,6 @@ BotanWrapper::BotanWrapper(QObject *parent, QString source, QString destination,
 
     //Set the default password
     mPassword = Hash("!@&^jdshUG24!T^!@*&!Y@()&^909+!-@!@#07");
-}
-
-void BotanWrapper::run() {
-    if (jobType == encrypt) {
-        EncryptFile(source, destination);
-    } else {
-        DecryptFile(source, destination);
-    }
 }
 
 BotanWrapper::~BotanWrapper() {

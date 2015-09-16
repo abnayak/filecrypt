@@ -12,6 +12,8 @@
 #include <dropdownbutton.h>
 #include <botanwrapper.h>
 
+class Zip;
+
 namespace Ui {
 class MainWindow;
 }
@@ -28,21 +30,37 @@ private:
     Ui::MainWindow *ui;
     // Dropdown file/dir browse button
     DropDownButton *inputBrowseButton;
+
     // Botan objec to encrypt the file
-    BotanWrapper *botan;
     int validateFields();
-    void beginCompress();
+    void encrypt();
     void beginEncryption();
     void decrypt();
     void deleteFile(QString file);
+
+    // Thread to run the workers
+    QThread thread;
+
+    // Library objects
+    Zip *zip;
+    BotanWrapper *botan;
+
+signals:
+    void startCompression(QString input, QString output);
+    void startUncompression(QString input, QString output);
+    void startEncryption(QString input, QString output);
+    void startDeCryption(QString input, QString output);
 
 public slots:
     void onOutputBrowseButtonClick();
     void onEncryptButtonClick();
     void onLogTextChanged(QString);
     void onDecryptCheckBoxSelect();
+
     void onCompressionFinished();
+    void onDecompressionFinished();
     void onEncryptionFinished();
+    void onDecryptionFinished();
 
     // Following two slots are being called by DropDownButton
     void onFileBrowseButtonClick();
