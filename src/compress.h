@@ -22,7 +22,7 @@ private:
     bool compressFiles(QStringList inputFiles, QString output);
 
 public:
-    Zip(QObject *parent);
+    Zip();
     ~Zip();
 
 public slots:
@@ -32,6 +32,7 @@ public slots:
 signals:
     void compressionFinished();
     void deCompressionFinished();
+    void logTextChanged(QString);
 };
 
 #endif // COMPRESS_H

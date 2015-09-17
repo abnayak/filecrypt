@@ -5,11 +5,8 @@
 
 #include "botanwrapper.h"
 
-BotanWrapper::BotanWrapper(QObject *parent) :
-    QObject(parent)
+BotanWrapper::BotanWrapper()
 {
-    this->parent = parent;
-
     //Set the default salt size
     mSalt.resize(48);
 
@@ -171,7 +168,8 @@ bool BotanWrapper::EncryptFile(QString Source, QString Destination)
         in.close();
 
         // Send the signal that encryption finished
-        QMetaObject::invokeMethod(parent, "onEncryptionFinished", Qt::QueuedConnection);
+        //QMetaObject::invokeMethod(parent, "onEncryptionFinished", Qt::QueuedConnection);
+        emit EncryptionFinished();
 
         return true;
     }

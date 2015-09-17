@@ -16,19 +16,21 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent), ui(new Ui::MainWind
     connect(ui->decryptCheckBox,SIGNAL(clicked()),this,SLOT(onDecryptCheckBoxSelect()));
 
     // setup the threads
-    zip = new Zip(this);
+    zip = new Zip();
     zip->moveToThread(&thread);
 
     connect(this, SIGNAL(startCompression(QString,QString)),zip, SLOT(compress(QString,QString)));
     connect(this,SIGNAL(startDeCryption(QString,QString)),zip,SLOT(deCompress(QString,QString)));
     connect(zip,SIGNAL(compressionFinished()),this,SLOT(onCompressionFinished()));
+    connect(zip,SIGNAL(logTextChanged(QString)),this,SLOT(onLogTextChanged(QString)));
 
     // Setup the encryption objects
-    botan = new BotanWrapper(this);
+    botan = new BotanWrapper();
     botan->moveToThread(&thread);
     connect(this,SIGNAL(startEncryption(QString,QString)),botan,SLOT(EncryptFile(QString,QString)));
     connect(this,SIGNAL(startDeCryption(QString,QString)),botan,SLOT(DecryptFile(QString,QString)));
     connect(botan,SIGNAL(EncryptionFinished()),this,SLOT(onEncryptionFinished()));
+    connect(botan,SIGNAL(logTextChanged(QString)),this,SLOT(onLogTextChanged(QString)));
 }
 
 MainWindow::~MainWindow() {
@@ -109,7 +111,7 @@ void MainWindow::decrypt() {
     QString password = ui->password->text();
     // Start the decryption
     emit onLogTextChanged(QString("Decrypting the file..."));
-    botan = new BotanWrapper(this);
+    botan = new BotanWrapper();
     botan->setPassword(password);
     botan->setSalt(password+password);
     botan->DecryptFile(source, destination);

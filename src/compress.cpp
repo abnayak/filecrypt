@@ -1,7 +1,6 @@
 #include "compress.h"
 
-Zip::Zip(QObject *parent) {
-    this->parent = parent;
+Zip::Zip() {
 }
 
 Zip::~Zip() {
@@ -58,6 +57,7 @@ QStringList Zip::deCompress(QString input, QString output) {
 
 void Zip::printLog(QString log) {
     const char* fun="logTextChanged";
-    QMetaObject::invokeMethod(parent, fun, Qt::QueuedConnection, Q_ARG(QString, log));
+    //QMetaObject::invokeMethod(parent, fun, Qt::QueuedConnection, Q_ARG(QString, log));
+    emit logTextChanged(log);
 }
 

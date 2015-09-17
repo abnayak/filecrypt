@@ -28,7 +28,7 @@ class BotanWrapper : public QObject
 {
     Q_OBJECT
 public:
-    explicit BotanWrapper(QObject *parent);
+    explicit BotanWrapper();
 
     ~BotanWrapper();
 
@@ -87,6 +87,7 @@ public:
 signals:
     void EncryptionFinished();
     void DecryptionFinished();
+    void logTextChanged(QString);
 
 public slots:
     /*!
@@ -104,7 +105,6 @@ public slots:
     bool DecryptFile(QString Source, QString Destination);
 
 private:
-    QObject *parent ;
 
     /*!
     * The botan libary initilizer
