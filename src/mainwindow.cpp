@@ -19,9 +19,10 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent), ui(new Ui::MainWind
     zip = new Zip();
     zip->moveToThread(&thread);
 
-    connect(this, SIGNAL(startCompression(QString,QString)),zip, SLOT(compress(QString,QString)));
-    connect(this,SIGNAL(startDeCryption(QString,QString)),zip,SLOT(deCompress(QString,QString)));
+    connect(this,SIGNAL(startCompression(QString,QString)),zip, SLOT(compress(QString,QString)));
+    connect(this,SIGNAL(startUncompression(QString,QString)),zip,SLOT(deCompress(QString,QString)));
     connect(zip,SIGNAL(compressionFinished()),this,SLOT(onCompressionFinished()));
+    connect(zip,SIGNAL(inflationFinished()),this, SLOT(onDecompressionFinished()));
     connect(zip,SIGNAL(logTextChanged(QString)),this,SLOT(onLogTextChanged(QString)));
 
     // Setup the encryption objects
@@ -31,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent), ui(new Ui::MainWind
     connect(this,SIGNAL(startEncryption(QString,QString)),botan,SLOT(EncryptFile(QString,QString)));
     connect(this,SIGNAL(startDeCryption(QString,QString)),botan,SLOT(DecryptFile(QString,QString)));
     connect(botan,SIGNAL(EncryptionFinished()),this,SLOT(onEncryptionFinished()));
+    connect(botan,SIGNAL(DecryptionFinished()),this,SLOT(onDecryptionFinished()));
     connect(botan,SIGNAL(logTextChanged(QString)),this,SLOT(onLogTextChanged(QString)));
 
     // Start the thread
@@ -113,22 +115,27 @@ void MainWindow::decrypt() {
     QString source = ui->inputLineEdit->text();
     QString destination = ui->outputLineEdit->text();
     QString password = ui->password->text();
+
     // Start the decryption
     emit onLogTextChanged(QString("Decrypting the file..."));
-    botan = new BotanWrapper();
+
     botan->setPassword(password);
     botan->setSalt(password+password);
-    botan->DecryptFile(source, destination);
-    delete(botan);
-    emit onLogTextChanged(QString("Decryption finished..."));
+
+    emit startDeCryption(source, destination+".temp");
 }
 
 void MainWindow::onDecryptionFinished() {
-    emit onLogTextChanged(QString("File unencrypted"));
+    emit onLogTextChanged(QString("Decryption finished..."));
+    QString destination = ui->outputLineEdit->text();
+    // Start the inflation
+    emit startUncompression(destination+".temp", destination);
 }
 
 void MainWindow::onDecompressionFinished() {
-
+    QString const destination = ui->outputLineEdit->text();
+    deleteFile(destination+".temp");
+    emit onLogTextChanged(QString("Restored the file..."));
 }
 
 void MainWindow::deleteFile(QString fileName) {
@@ -141,7 +148,6 @@ void MainWindow::deleteFile(QString fileName) {
 void MainWindow::onLogTextChanged(QString log) {
     qDebug() << "Caught LogTextChanged signal";
     // Add the new log line to logText edit field
-    //ui->logText->moveCursor(QTextCursor::End);
     ui->logText->insertPlainText(log + "\n");
 }
 

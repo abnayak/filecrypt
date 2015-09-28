@@ -27,11 +27,11 @@ public:
 
 public slots:
     void compress(QString input, QString output);
-    QStringList deCompress(QString input, QString output);
+    void deCompress(QString input, QString output);
 
 signals:
     void compressionFinished();
-    void deCompressionFinished();
+    void inflationFinished();
     void logTextChanged(QString);
 };
 

@@ -209,12 +209,14 @@ bool BotanWrapper::DecryptFile(QString Source, QString Destination)
         out.close();
         in.close();
 
+        emit DecryptionFinished();
         return true;
     }
     catch(...)
     {
         return false;
     }
+
 }
 
 void BotanWrapper::setPassword(QString Password)

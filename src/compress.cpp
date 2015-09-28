@@ -49,13 +49,12 @@ void Zip::compress(QString input, QString output) {
 }
 
 // Extract the file
-QStringList Zip::deCompress(QString input, QString output) {
-    return JlCompress::extractDir(input, output);
-    emit deCompressionFinished();
+void Zip::deCompress(QString input, QString output) {
+    JlCompress::extractDir(input, output);
+    emit inflationFinished();
 }
 
 void Zip::printLog(QString log) {
     //QMetaObject::invokeMethod(parent, fun, Qt::QueuedConnection, Q_ARG(QString, log));
     emit logTextChanged(log);
 }
-
