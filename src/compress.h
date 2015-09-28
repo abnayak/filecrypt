@@ -12,7 +12,7 @@
 #include <QObject>
 #include <QMetaObject>
 
-class Zip:public QObject {
+class Zip : public QObject {
     Q_OBJECT
 private:
     QObject *parent;

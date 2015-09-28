@@ -23,7 +23,6 @@ void Zip::compress(QString input, QString output) {
 
     if(fileInfo.exists()) {
         qDebug() << "File: " << input << " exists.";
-        printLog(input + " exists.");
 
         // If the file is a directory
         if(fileInfo.isDir()) {
@@ -56,7 +55,6 @@ QStringList Zip::deCompress(QString input, QString output) {
 }
 
 void Zip::printLog(QString log) {
-    const char* fun="logTextChanged";
     //QMetaObject::invokeMethod(parent, fun, Qt::QueuedConnection, Q_ARG(QString, log));
     emit logTextChanged(log);
 }

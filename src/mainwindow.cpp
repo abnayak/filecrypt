@@ -27,10 +27,14 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent), ui(new Ui::MainWind
     // Setup the encryption objects
     botan = new BotanWrapper();
     botan->moveToThread(&thread);
+
     connect(this,SIGNAL(startEncryption(QString,QString)),botan,SLOT(EncryptFile(QString,QString)));
     connect(this,SIGNAL(startDeCryption(QString,QString)),botan,SLOT(DecryptFile(QString,QString)));
     connect(botan,SIGNAL(EncryptionFinished()),this,SLOT(onEncryptionFinished()));
     connect(botan,SIGNAL(logTextChanged(QString)),this,SLOT(onLogTextChanged(QString)));
+
+    // Start the thread
+    thread.start();
 }
 
 MainWindow::~MainWindow() {
